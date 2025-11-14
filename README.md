@@ -1,90 +1,346 @@
-# CampusConnect – Social Media Platform for College Students
+# CampusConnect - Social Media Web Application
 
-## Overview
+A full-stack social media platform built for campus communities, featuring posts, followers, and real-time messaging.
 
-CampusConnect is a purpose-built social media application designed to help university students connect with classmates in their respective courses. It facilitates collaboration, discussions, and community participation in an academic environment.
+## 🚀 Features
 
-## Features
+- **User Authentication** - Secure login and registration system
+- **Posts & Feed** - Create, edit, and delete posts with images/videos
+- **Follow System** - Follow/unfollow users with one-way follow support
+- **Private Messaging** - Real-time chat with users you follow
+- **User Profiles** - Customizable profiles with college information
+- **Admin Panel** - User management and moderation tools
 
-- **Login/Signup & Admin Functionality:**  
-  Secure user authentication, account creation, and admin controls for user management and content moderation.
+## 🛠️ Tech Stack
 
-- **Social Feed:**  
-  Enables campus students to interact and engage by dynamically displaying user-generated posts, updates, and discussions.
+### Frontend
 
-- **File Sharing & Landing Page:**  
-  Supports collaborative projects and resource sharing through file upload, download, and sharing features integrated into the landing page.
+- React.js
+- React Router
+- Axios
+- Firebase (for media storage)
+- CSS3 with custom variables
 
-- **Search & Auto-Suggest:**  
-  Enhances accessibility and efficiency with robust search functionality, including auto-suggestion for quickly finding posts, users, or resources.
+### Backend
 
-- **Profile Page:**  
-  Allows users to personalize their profiles, showcase interests, activities, and contributions, and connect with others based on shared interests.
+- Java Spring Boot
+- Spring Data JPA
+- PostgreSQL
+- Flyway (database migrations)
+- Maven
 
-## Technologies Used
+## 📋 Prerequisites
 
-- **Frontend:** React.js
-- **Backend:** Java, Spring Boot
-- **Database:** MySQL
+Before you begin, ensure you have the following installed:
 
-## Project Structure
+- **Node.js** (v14 or higher) - [Download](https://nodejs.org/)
+- **npm** (comes with Node.js)
+- **Java JDK** (v11 or higher) - [Download](https://www.oracle.com/java/technologies/downloads/)
+- **Maven** (v3.6 or higher) - [Download](https://maven.apache.org/download.cgi)
+- **PostgreSQL** (v12 or higher) - [Download](https://www.postgresql.org/download/)
+- **Git** - [Download](https://git-scm.com/downloads)
 
-Campus-Connect/
-│
-├─ Front-end/ # React.js frontend
-│ ├─ public/ # Public assets
-│ ├─ src/ # React source code
-│ │ ├─ components/ # Reusable UI components
-│ │ ├─ pages/ # Page-level components
-│ │ ├─ services/ # API service calls
-│ │ └─ App.js # Main React app
-│ └─ package.json # Frontend dependencies
-│
-├─ Back-end/ # Spring Boot backend
-│ ├─ src/main/java/com/socialmediaweb/socialmediaweb/
-│ │ ├─ controller/ # REST controllers (UserController, PostController)
-│ │ ├─ entities/ # JPA entity classes (Users, Post, Role, UserRole)
-│ │ ├─ repository/ # Spring Data JPA repositories
-│ │ ├─ service/ # Business logic and service classes
-│ │ └─ SocialmediaWebApplication.java # Main Spring Boot application
-│ ├─ src/main/resources/
-│ │ └─ application.properties # DB and application config
-│ └─ pom.xml # Backend dependencies
-│
-└─ README.md # Project documentation
+## 🔧 Installation & Setup
 
-## Installation & Setup
+### 1. Clone the Repository
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/nikhilp9972-spec/campus-connect-.git
-   ```
+```bash
+git clone <your-repository-url>
+cd CampusConnect
+```
 
-Navigate to the frontend directory:
+### 2. Database Setup
 
-cd Front-end
+#### Create PostgreSQL Database
 
-Install frontend dependencies:
+```bash
+# Login to PostgreSQL
+psql -U postgres
 
+# Create database
+CREATE DATABASE campusconnect;
+
+# Exit psql
+\q
+```
+
+#### Configure Database Connection
+
+Edit `back-end/src/main/resources/application.properties`:
+
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/campusconnect
+spring.datasource.username=your_postgres_username
+spring.datasource.password=your_postgres_password
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+```
+
+### 3. Backend Setup
+
+```bash
+# Navigate to backend directory
+cd back-end
+
+# Install dependencies and build
+mvn clean install
+
+# Run the Spring Boot application
+mvn spring-boot:run
+```
+
+The backend server will start on `http://localhost:8081`
+
+### 4. Frontend Setup
+
+#### Configure Firebase (for media uploads)
+
+1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
+2. Enable Storage in your Firebase project
+3. Get your Firebase configuration
+
+Create `front-end/src/firebase.js`:
+
+```javascript
+import { initializeApp } from "firebase/app";
+import { getStorage } from "firebase/storage";
+
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID",
+};
+
+const app = initializeApp(firebaseConfig);
+export const storage = getStorage(app);
+```
+
+#### Install and Run Frontend
+
+```bash
+# Navigate to frontend directory
+cd front-end
+
+# Install dependencies
 npm install
 
-Navigate to the backend directory:
+# Start the development server
+npm start
+```
 
-cd ../Back-end
+The frontend will start on `http://localhost:3000`
 
-Update application.properties with your MySQL username and password.
+## 🗄️ Database Migrations
 
-(Optional) Create the database automatically:
-Uncomment the following line in application.properties:
+The project uses Flyway for database migrations. Migrations run automatically on application startup.
 
-spring.jpa.hibernate.ddl-auto = create-drop
+Migration files are located in:
 
-Start the Spring Boot backend application:
+```
+back-end/src/main/resources/db/migration/
+```
 
-./mvnw spring-boot:run
+### Available Migrations:
 
-Access the application:
-Open http://localhost:8081
-in your web browser.
+- `V1__create_follows_table.sql` - Creates follow relationships table
+- `V2__create_chat_tables.sql` - Creates chat and messages tables
 
-⭐ Don’t forget to give it a star if you like it!
+## 📁 Project Structure
+
+```
+CampusConnect/
+├── back-end/
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/com/socialmediaweb/socialmediaweb/
+│   │   │   │   ├── controller/     # REST API endpoints
+│   │   │   │   ├── service/        # Business logic
+│   │   │   │   ├── repository/     # Database access
+│   │   │   │   ├── entities/       # JPA entities
+│   │   │   │   └── dto/            # Data transfer objects
+│   │   │   └── resources/
+│   │   │       ├── application.properties
+│   │   │       └── db/migration/   # Flyway migrations
+│   │   └── test/
+│   └── pom.xml
+│
+└── front-end/
+    ├── public/
+    ├── src/
+    │   ├── components/         # React components
+    │   │   ├── css/           # Component styles
+    │   │   └── common/        # Shared components
+    │   ├── config/            # API configuration
+    │   ├── assets/            # Images and media
+    │   ├── utils/             # Utility functions
+    │   ├── firebase.js        # Firebase config
+    │   └── index.js           # App entry point
+    └── package.json
+```
+
+## 🔑 API Endpoints
+
+### Authentication
+
+- `POST /createuser` - Register new user
+- `POST /login` - User login
+
+### Posts
+
+- `GET /feed` - Get all posts
+- `POST /createpost` - Create new post
+- `PUT /updatepost` - Update post
+- `DELETE /deletepost/{id}` - Delete post
+- `GET /posts/user/{userId}` - Get user's posts
+
+### Follow System
+
+- `POST /api/follow` - Follow a user
+- `DELETE /api/follow` - Unfollow a user
+- `GET /api/follow/followers/{userId}` - Get followers list
+- `GET /api/follow/following/{userId}` - Get following list
+- `GET /api/follow/counts/{userId}` - Get follower/following counts
+
+### Chat/Messaging
+
+- `GET /api/chats` - Get user's chats
+- `GET /api/chats/with/{userId}` - Get or create chat
+- `GET /api/chats/{chatId}/messages` - Get messages
+- `POST /api/chats/{chatId}/messages` - Send message
+- `DELETE /api/chats/messages/{messageId}` - Delete message
+- `GET /api/chats/unread-count` - Get unread count
+
+## 🎨 Features in Detail
+
+### Follow System
+
+- One-way follow model (like Twitter)
+- Users can message anyone they follow
+- Mutual follow indicators
+- Follower/following lists with search
+
+### Messaging System
+
+- Private one-on-one chats
+- 100-character message limit
+- Real-time updates via polling
+- Unread message counts
+- Message deletion
+- Chat with users you follow
+
+### Posts
+
+- Text, image, and video posts
+- Edit and delete own posts
+- Admin moderation capabilities
+- Automatic link detection
+- Media upload via Firebase
+
+## 🚦 Running in Production
+
+### Backend
+
+```bash
+# Build JAR file
+cd back-end
+mvn clean package
+
+# Run JAR
+java -jar target/socialmediaweb-0.0.1-SNAPSHOT.jar
+```
+
+### Frontend
+
+```bash
+# Build production bundle
+cd front-end
+npm run build
+
+# Serve with a static server (e.g., serve)
+npx serve -s build
+```
+
+## 🐛 Troubleshooting
+
+### Backend Issues
+
+**Port 8081 already in use:**
+
+```bash
+# Change port in application.properties
+server.port=8082
+```
+
+**Database connection failed:**
+
+- Verify PostgreSQL is running
+- Check database credentials in `application.properties`
+- Ensure database `campusconnect` exists
+
+### Frontend Issues
+
+**Module not found errors:**
+
+```bash
+# Clear node_modules and reinstall
+rm -rf node_modules package-lock.json
+npm install
+```
+
+**Firebase errors:**
+
+- Verify Firebase configuration in `firebase.js`
+- Check Firebase Storage rules
+- Ensure Firebase project is active
+
+**CORS errors:**
+
+- Backend CORS is configured for `http://localhost:3000`
+- Update CORS settings in controllers if using different port
+
+## 📝 Environment Variables
+
+### Backend (`application.properties`)
+
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/campusconnect
+spring.datasource.username=postgres
+spring.datasource.password=your_password
+server.port=8081
+```
+
+### Frontend (`.env`)
+
+```env
+REACT_APP_API_URL=http://localhost:8081
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 👥 Authors
+
+- Your Name - Initial work
+
+## 🙏 Acknowledgments
+
+- Spring Boot documentation
+- React documentation
+- Firebase documentation
+- PostgreSQL community
+
+## 📞 Support
+
+For support, email your-email@example.com or open an issue in the repository.
+
+---
+
+**Happy Coding! 🎉**
